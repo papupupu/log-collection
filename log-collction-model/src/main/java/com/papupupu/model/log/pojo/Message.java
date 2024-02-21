@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.lang.reflect.Type;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -36,11 +37,11 @@ public class Message {
         return new Message().setType(TypeConstants.ALLOCATE).setData(MessageData.allocate(meter_type, meter_id, data));
     }
 
-    public static Message receive(String meter_type, String meter_id) throws UnknownHostException {
-        return new Message().setType(TypeConstants.RECEIVE).setData(MessageData.receive(meter_type, meter_id));
+    public static Message receive(String meter_type, String meter_id, String data) throws  SocketException {
+        return new Message().setType(TypeConstants.RECEIVE).setData(MessageData.receive(meter_type, meter_id, data));
     }
 
-    public static Message send(String meter_type, String meter_id, String data) throws UnknownHostException{
+    public static Message send(String meter_type, String meter_id, String data) throws  SocketException {
         return new Message().setType(TypeConstants.SEND).setData(MessageData.send(meter_type, meter_id, data));
     }
 
