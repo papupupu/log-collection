@@ -1,10 +1,12 @@
 package com.papupupu.model.log.pojo;
 
 
+import com.paupupu.common.inet.Inet;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 @Data
@@ -20,12 +22,12 @@ public class MessageData {
         return new MessageData().setMeter_type(meter_type).setMeter_id(meter_id).setData(data);
     }
 
-    static public MessageData receive(String meter_type, String meter_id) throws UnknownHostException {
-        return new MessageData().setMeter_type(meter_type).setMeter_id(meter_id).setIp(InetAddress.getLocalHost().getHostAddress());
+    static public MessageData receive(String meter_type, String meter_id, String data) throws  SocketException {
+        return new MessageData().setMeter_type(meter_type).setMeter_id(meter_id).setData(data).setIp(Inet.getHostAddr("en0"));
     }
 
-    static public MessageData send(String meter_type, String meter_id, String data) throws UnknownHostException {
-        return new MessageData().setMeter_type(meter_type).setMeter_id(meter_id).setData(data).setIp(InetAddress.getLocalHost().getHostAddress());
+    static public MessageData send(String meter_type, String meter_id, String data) throws SocketException {
+        return new MessageData().setMeter_type(meter_type).setMeter_id(meter_id).setData(data).setIp(Inet.getHostAddr("en0"));
     }
 
     static public MessageData upload(String meter_type, String meter_id, String data, String result){
