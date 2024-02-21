@@ -7,6 +7,7 @@ import com.paupupu.common.inet.Inet;
 import junit.framework.TestCase;
 
 
+import javax.swing.plaf.SpinnerUI;
 import java.net.*;
 
 public class MessageTest extends TestCase {
@@ -49,5 +50,10 @@ public class MessageTest extends TestCase {
         System.out.println(upload);
         String string = objectMapper.writeValueAsString(upload);
         System.out.println(string);
+    }
+
+    public void test01(){
+        Message upload = Message.upload("03", "031523400019", "15030315234000198000000000058FCCC4EDC80514", "AAAAAAAAAA0A");
+        System.out.println(upload);
     }
 }

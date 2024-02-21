@@ -1,0 +1,12 @@
+server:
+  port: 9992
+
+spring:
+  application:
+    name: log-collection-consumer
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: ${spring.application.name}-test
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer

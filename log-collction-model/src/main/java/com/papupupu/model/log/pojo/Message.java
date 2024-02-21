@@ -1,6 +1,7 @@
 package com.papupupu.model.log.pojo;
 
 
+//import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.paupupu.common.constants.message.TypeConstants;
 import jdk.dynalink.linker.GuardingTypeConverterFactory;
