@@ -1,5 +1,12 @@
 package com.papupupu.producer.runner;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.papupupu.model.log.pojo.Message;
+import com.papupupu.producer.common.constant.FileConstants;
+import com.papupupu.producer.config.FileFilterConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -14,21 +21,21 @@ public class ProducerRunner implements ApplicationRunner {
     @Autowired
     private KafkaTemplate kafkaTemplate;
 
+    @Autowired
+    private FileFilterConfig fileFilterConfig;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
-//        for (int i = 0; i < 10; i++){
-//            String msg = "消息 ：" + i;
-//            kafkaTemplate.send("itcast-topic", msg);
-//            System.out.println(msg);
-//        }
-//        Integer i = 0;
-//        while (true){
-//            kafkaTemplate.send("itcast-topic", "消息" + ++i);
-//            Thread.sleep(1000);
-//        }
+        ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        Logger dailyLogger = LoggerFactory.getLogger("dailyLogger");
+        fileFilterConfig.FileFilter(FileConstants.ROOTPATH, "daily.log");
 
         while (true){
-            kafkaTemplate.send("log")
+            Thread.sleep(3000);
+            String log = objectMapper.writeValueAsString(Message.send("03", "031523400019", "15030315234000198000000000058FCCC4EDC80514"));
+//            kafkaTemplate.send("log-topic", msg);
+//            System.out.println(msg);
+            dailyLogger.error(log);
         }
     }
 }

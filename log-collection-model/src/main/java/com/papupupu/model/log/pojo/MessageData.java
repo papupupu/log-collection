@@ -1,6 +1,7 @@
 package com.papupupu.model.log.pojo;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.paupupu.common.inet.Inet;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -11,6 +12,7 @@ import java.net.UnknownHostException;
 
 @Data
 @Accessors(chain = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageData {
     private String ip;
     private String meter_type;
