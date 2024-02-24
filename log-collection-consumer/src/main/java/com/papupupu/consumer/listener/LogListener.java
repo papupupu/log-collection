@@ -25,6 +25,7 @@ public class LogListener {
     @KafkaListener(topics = "log-topic")
     public void test(String message) throws JsonProcessingException {
         System.out.println(message);
+
     }
 
 
