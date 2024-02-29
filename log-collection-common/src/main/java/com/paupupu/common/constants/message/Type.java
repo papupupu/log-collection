@@ -1,6 +1,6 @@
 package com.paupupu.common.constants.message;
 
-public class TypeConstants {
+public class Type {
     public static String ALLOCATE = "allocate";
     public static String RECEIVE = "receive";
     public static String SEND = "send";

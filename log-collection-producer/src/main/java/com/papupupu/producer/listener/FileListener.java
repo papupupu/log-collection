@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.RandomAccessFile;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class FileListener extends FileAlterationListenerAdaptor {
@@ -25,8 +27,9 @@ public class FileListener extends FileAlterationListenerAdaptor {
             randomAccessFile.seek(lastReadPosition);
             String msg;
             while ((msg = randomAccessFile.readLine()) != null) {
-                kafkaTemplate.send("log-topic", msg);
-                System.out.println(msg);
+                String decodedMsg = new String(msg.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+                kafkaTemplate.send("log-topic", decodedMsg);
+                System.out.println(decodedMsg);
             }
             lastReadPosition = randomAccessFile.getFilePointer();
         } catch (Exception e) {
