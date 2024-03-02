@@ -3,6 +3,8 @@ package com.papupupu.consumer.model.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -50,10 +52,14 @@ public class Log {
     @TableField(value = "meter_id")
     private String meterId;
 
-    @TableField(value = "data")
-    private String data;
+    @TableField(value = "data", typeHandler = JacksonTypeHandler.class)
+    private MessageData data;
 
+    @TableField(exist = false)
     private String logLevel;
+
+
+
     public static Log MessageToLog(String msg) throws ParseException, JsonProcessingException {
 
         Message message = objectMapper.readValue(msg, Message.class);
@@ -66,7 +72,7 @@ public class Log {
             setType(message.getType()).
             setMeterType(Integer.parseInt(message.getData().getMeter_type())).
             setMeterId(message.getData().getMeter_id()).
-            setData(message.getData().getData()).
+            setData(message.getData()).
             setLogLevel(message.getLogLevel());
     }
 }

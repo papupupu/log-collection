@@ -1,6 +1,7 @@
 package com.papupupu.consumer.listener;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -35,38 +36,26 @@ public class LogListener {
 
     @KafkaListener(topics = "log-topic")
     public void test(String message) throws JsonProcessingException, ParseException {
-//        System.out.println(message);
         Log log = Log.MessageToLog(message);
-        System.out.println(log.getLogLevel());
-        switch (log.getLogLevel()) {
-            case LogLevel.ERROR:
-                try {
-                    System.out.println(message);
-                    errorLogService.save((ErrorLog) log);
-                    break;
-                } catch (Exception ignored) {
-                }
 
-            case LogLevel.WARNING:
-                try {
+        try {
+            switch (log.getLogLevel()) {
+                case LogLevel.ERROR:
                     System.out.println(message);
-                    warningLogService.save((WarningLog) log);
+                    errorLogService.save(new ErrorLog(log));
                     break;
-                } catch (Exception ignored) {
-                }
 
-            case LogLevel.INFO:
-                try {
-                    System.out.println(message);
-                    infoLogService.save((InfoLog) log);
+                case LogLevel.WARNING:
+                    warningLogService.save(new WarningLog(log));
                     break;
-                } catch (Exception ignored) {
-                }
+
+                case LogLevel.INFO:
+                    InfoLog infoLog = new InfoLog(log);
+                    infoLogService.save(infoLog);
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println("出现异常");
         }
-
-
-//        System.out.println(log);
-//        System.out.println(log1);
-
     }
 }
