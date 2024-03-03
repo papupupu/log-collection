@@ -34,7 +34,9 @@ public class ProducerRunner implements ApplicationRunner {
         fileFilterConfig.FileFilter(FileConstants.ROOTPATH, "daily.log");
 
         while (true){
-            String log = objectMapper.writeValueAsString(Message.send("03", "031523400019", "15030315234000198000000000058FCCC4EDC80514", TestPlaform.CORRECTOR_INITIAL_CHECK, LogLevel.INFO, MachineId.getRandom()));
+            Message message = Message.getRandom();
+            String log = objectMapper.writeValueAsString(message);
+//            String log = objectMapper.writeValueAsString(Message.send("03", "031523400019", "15030315234000198000000000058FCCC4EDC80514", TestPlaform.CORRECTOR_INITIAL_CHECK, LogLevel.INFO, MachineId.getRandom()));
 //            kafkaTemplate.send("log-topic", msg);
             System.out.println(log);
             dailyLogger.error(log);
