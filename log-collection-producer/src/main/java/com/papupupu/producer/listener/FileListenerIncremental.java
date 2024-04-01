@@ -1,24 +1,30 @@
 package com.papupupu.producer.listener;
 
 
+import lombok.Synchronized;
 import org.apache.commons.io.monitor.FileAlterationListener;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
+import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class FileListener extends FileAlterationListenerAdaptor {
+public class FileListenerIncremental extends FileAlterationListenerAdaptor {
     @Autowired
     private KafkaTemplate kafkaTemplate;
 
     private static long lastReadPosition = 0;
+
+
+
     @Override
     public void onFileChange(File file) {
 //        if(!file.getName().equals("daily.log")) return;
@@ -31,7 +37,9 @@ public class FileListener extends FileAlterationListenerAdaptor {
                 kafkaTemplate.send("log-topic", decodedMsg);
                 System.out.println(decodedMsg);
             }
-            lastReadPosition = randomAccessFile.getFilePointer();
+//            synchronized(FileListener.class){
+                lastReadPosition = randomAccessFile.getFilePointer();
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

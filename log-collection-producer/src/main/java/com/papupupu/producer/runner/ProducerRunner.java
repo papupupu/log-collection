@@ -8,6 +8,7 @@ import com.papupupu.producer.config.FileFilterConfig;
 import com.paupupu.common.constants.message.LogLevel;
 import com.paupupu.common.constants.message.MachineId;
 import com.paupupu.common.constants.message.TestPlaform;
+import com.paupupu.common.constants.monitor.MonitorWay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
+
+import static com.paupupu.common.constants.monitor.MonitorWay.FULL_MONITORING;
+import static com.paupupu.common.constants.monitor.MonitorWay.INCREMENTAL_MONITORING;
 
 
 @Component
@@ -31,14 +35,19 @@ public class ProducerRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
         Logger dailyLogger = LoggerFactory.getLogger("dailyLogger");
-        fileFilterConfig.FileFilter(FileConstants.ROOTPATH, "daily.log");
+
+        //增加增量监控
+        fileFilterConfig.FileFilter(FileConstants.ROOTPATH, "daily.log", INCREMENTAL_MONITORING);
+
+        //对文件增加全量监控
+        fileFilterConfig.FileFilter(FileConstants.ROOTPATH, "full.log", FULL_MONITORING);
 
         while (true){
             Message message = Message.getRandom();
             String log = objectMapper.writeValueAsString(message);
 //            String log = objectMapper.writeValueAsString(Message.send("03", "031523400019", "15030315234000198000000000058FCCC4EDC80514", TestPlaform.CORRECTOR_INITIAL_CHECK, LogLevel.INFO, MachineId.getRandom()));
 //            kafkaTemplate.send("log-topic", msg);
-            System.out.println(log);
+//            System.out.println(log);
             dailyLogger.error(log);
             Thread.sleep(3000);
         }

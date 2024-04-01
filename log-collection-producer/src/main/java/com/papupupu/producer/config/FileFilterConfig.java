@@ -2,8 +2,11 @@ package com.papupupu.producer.config;
 
 
 import com.jayway.jsonpath.internal.filter.ValueNode;
-import com.papupupu.producer.listener.FileListener;
+import com.papupupu.producer.listener.FileListenerFull;
+import com.papupupu.producer.listener.FileListenerIncremental;
+import com.paupupu.common.constants.monitor.MonitorWay;
 import org.apache.commons.io.filefilter.AbstractFileFilter;
+import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
 import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.junit.platform.commons.util.StringUtils;
@@ -15,12 +18,19 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.concurrent.TimeUnit;
 
+import static com.paupupu.common.constants.monitor.MonitorWay.FULL_MONITORING;
+import static com.paupupu.common.constants.monitor.MonitorWay.INCREMENTAL_MONITORING;
+
 @Configuration
 public class FileFilterConfig {
     @Autowired
-    private FileListener fileListener;
+    private FileListenerIncremental fileListenerIncremental;
 
-    public void FileFilter(String rootPath, String fileName){
+    @Autowired
+    private FileListenerFull fileListenerFull;
+
+
+    public void FileFilter(String rootPath, String fileName, String monitorWay){
         //设置200毫秒轮询一次
         long interval =  200;
         FileAlterationObserver observer = null;
@@ -36,7 +46,19 @@ public class FileFilterConfig {
         else {
              observer = new FileAlterationObserver(rootPath);
         }
-        observer.addListener(fileListener);
+
+        FileAlterationListenerAdaptor fileAlterationListener;
+        switch (monitorWay){
+            case INCREMENTAL_MONITORING:
+                fileAlterationListener = fileListenerIncremental;
+                break;
+            case FULL_MONITORING:
+                fileAlterationListener = fileListenerFull;
+                break;
+            default:
+                fileAlterationListener = fileListenerIncremental;
+        }
+        observer.addListener(fileAlterationListener);
         FileAlterationMonitor monitor = new FileAlterationMonitor(interval, observer);
         try {
             monitor.start();
