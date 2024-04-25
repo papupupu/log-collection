@@ -12,6 +12,28 @@ public class LogLevel {
     private static List<String> loglevelList = new ArrayList<>();
     static {
         loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(INFO);
+        loglevelList.add(WARNING);
+        loglevelList.add(WARNING);
+        loglevelList.add(WARNING);
         loglevelList.add(WARNING);
         loglevelList.add(ERROR);
     }

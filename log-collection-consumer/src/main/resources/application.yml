@@ -21,7 +21,10 @@ spring:
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://rm-uf6087x4566hm2xs86o.rwlb.rds.aliyuncs.com/log_collection?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai
-    username: log_collection
-    password: log_collection=123
+#    url: jdbc:mysql://rm-uf6087x4566hm2xs86o.rwlb.rds.aliyuncs.com/log_collection?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai
+#    url: jdbc:mysql://rm-uf6087x4566hm2xs86o.rwlb.rds.aliyuncs.com/ry-vue?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/ry-vue?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai
+#    username: log_collection
+    username: papupupu
+    password: pppp
     driver-class-name: com.mysql.cj.jdbc.Driver
