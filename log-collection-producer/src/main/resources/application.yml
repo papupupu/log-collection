@@ -10,8 +10,26 @@ spring:
       retries: 10
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-#    consumer:
-#      group-id: log-collection-consumer-test
-#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  #    consumer:
+  #      group-id: log-collection-consumer-test
+  #      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  #      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: pppp
+      lettuce:
+        pool:
+          # 链接池最大活跃线程
+          max-active: 8
+          # 空闲线程最大数
+          max-idle: 8
+          # 空闲线程最小数
+          min-idle: 0
+          #
+          max-wait: 100ms
+
+
 
