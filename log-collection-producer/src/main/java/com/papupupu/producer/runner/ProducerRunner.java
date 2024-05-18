@@ -76,7 +76,7 @@ public class ProducerRunner implements ApplicationRunner {
 //            kafkaTemplate.send("log-topic", msg);
 //            System.out.println(log);
             dailyLogger.error(log);
-            Thread.sleep(3000);
+            Thread.sleep(100);
         }
     }
 }

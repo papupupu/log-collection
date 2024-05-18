@@ -17,7 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.sql.DatabaseMetaData;
+import java.sql.Time;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.logging.SimpleFormatter;
 
 import com.paupupu.common.constants.message.LogLevel;
 
@@ -41,7 +50,7 @@ public class LogListener {
         try {
             switch (log.getLogLevel()) {
                 case LogLevel.ERROR:
-                    System.out.println(message);
+//                    System.out.println(message);
                     errorLogService.save(new ErrorLog(log));
                     break;
 
@@ -57,5 +66,31 @@ public class LogListener {
         } catch (Exception e) {
             System.out.println("出现异常");
         }
+//        System.out.println("日志产生时间:\t" + log.getDate().toString() + " " + log.getTime().toString());
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSS");
+//        Date date = new Date();
+//        String now = dateFormat.format(date);
+//        System.out.println("存储日志时间:\t" + now);
+
+
+        LocalDate logDate = log.getDate();
+        LocalTime logTime = log.getTime();
+        LocalDateTime logDateTime = LocalDateTime.of(logDate, logTime);
+
+        // 获取当前系统时间
+        LocalDateTime nowDateTime = LocalDateTime.now();
+
+        // 转换为 java.util.Date 对象
+        Date logDateUtil = Date.from(logDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        Date nowDateUtil = Date.from(nowDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+        // 计算差值
+        long elapsedTimeInMillis = nowDateUtil.getTime() - logDateUtil.getTime();
+
+//        System.out.println("日志产生时间:\t" + logDateTime.toString());
+//        System.out.println("存储日志时间:\t" + nowDateTime.toString());
+//        System.out.println("时间差:\t" + elapsedTimeInMillis + "毫秒");
+        System.out.println(elapsedTimeInMillis);
+
     }
 }

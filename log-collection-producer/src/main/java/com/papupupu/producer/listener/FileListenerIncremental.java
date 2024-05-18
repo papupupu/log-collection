@@ -42,7 +42,7 @@ public class FileListenerIncremental extends FileAlterationListenerAdaptor {
             while ((msg = randomAccessFile.readLine()) != null) {
                 String decodedMsg = new String(msg.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
                 kafkaTemplate.send("log-topic", decodedMsg);
-                System.out.println(decodedMsg);
+//                System.out.println(decodedMsg);
             }
 //            synchronized(FileListener.class){
                 lastReadPosition = randomAccessFile.getFilePointer();
