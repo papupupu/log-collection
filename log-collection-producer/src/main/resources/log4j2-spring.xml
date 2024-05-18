@@ -3,7 +3,7 @@
     <appenders>
 <!--        <RollingFile name="dailyLogger" fileName="/Users/papu/IdeaProjects/logs/daily.log" filePattern="/Users/papu/IdeaProjects/logs/$${date:yyyy-MM}/info_%d{yyyy-MM-dd}.log">-->
 <!--        <RollingFile name="dailyLogger" fileName="/Users/papu/IdeaProjects/logs/daily.log" filePattern="/Users/papu/IdeaProjects/logs/$${date:yyyy}/$${date:MM}/$${date:dd}/%d{HH-mm}.log">-->
-        <RollingFile name="dailyLogger" fileName="/Users/papu/IdeaProjects/logs/daily.log" filePattern="/Users/papu/IdeaProjects/logs/$${date:yyyy}/$${date:MM}/%d{dd}.log">
+        <RollingFile name="dailyLogger1" fileName="/Users/papu/IdeaProjects/logs/daily1.log" filePattern="/Users/papu/IdeaProjects/logs/$${date:yyyy}/$${date:MM}/%d{dd}.log">
         <PatternLayout>
                 <!--                <pattern></pattern>-->
                 <!--                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %class{36} %L %M - %msg%n</pattern>-->
@@ -16,10 +16,28 @@
             <!--            注意要把一个月的存储到一个文件夹中，DefaultRolloverStrategy max设置为31-->
             <DefaultRolloverStrategy max="31"/>
         </RollingFile>
+
+        <RollingFile name="dailyLogger2" fileName="/Users/papu/IdeaProjects/logs/daily2.log" filePattern="/Users/papu/IdeaProjects/logs/$${date:yyyy}/$${date:MM}/%d{dd}.log">
+            <PatternLayout>
+                <!--                <pattern></pattern>-->
+                <!--                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %class{36} %L %M - %msg%n</pattern>-->
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <!--                    <TimeBasedTriggeringPolicy interval="0.0001" modulate="true"/>-->
+
+            </Policies>
+            <!--            注意要把一个月的存储到一个文件夹中，DefaultRolloverStrategy max设置为31-->
+            <DefaultRolloverStrategy max="31"/>
+        </RollingFile>
     </appenders>
     <loggers>
-        <Logger name="dailyLogger" level = "ERROR">
-            <appender-ref ref="dailyLogger"/>
+        <Logger name="dailyLogger1" level = "ERROR">
+            <appender-ref ref="dailyLogger1"/>
+        </Logger>
+
+        <Logger name="dailyLogger2" level = "ERROR">
+            <appender-ref ref="dailyLogger2"/>
         </Logger>
     </loggers>
 </configuration>

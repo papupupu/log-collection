@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.papupupu.model.log.pojo.Message;
 import com.papupupu.producer.common.constant.FileConstants;
+import com.papupupu.producer.config.CollectionConfig;
 import com.papupupu.producer.config.FileFilterConfig;
 import com.paupupu.common.constants.message.LogLevel;
 import com.paupupu.common.constants.message.MachineId;
@@ -21,6 +22,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.paupupu.common.constants.monitor.MonitorWay.FULL_MONITORING;
@@ -29,8 +31,7 @@ import static com.paupupu.common.constants.monitor.MonitorWay.INCREMENTAL_MONITO
 
 @Component
 public class ProducerRunner implements ApplicationRunner {
-    @Autowired
-    private KafkaTemplate kafkaTemplate;
+
 
     @Autowired
     private FileFilterConfig fileFilterConfig;
@@ -38,6 +39,9 @@ public class ProducerRunner implements ApplicationRunner {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private CollectionConfig collectionConfig;
 
 
     @Value("${server.port}")
@@ -47,7 +51,9 @@ public class ProducerRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        Logger dailyLogger = LoggerFactory.getLogger("dailyLogger");
+        Logger dailyLogger1 = LoggerFactory.getLogger("dailyLogger1");
+        Logger dailyLogger2 = LoggerFactory.getLogger("dailyLogger2");
+
 
         Runnable runnable = () -> {
 
@@ -63,20 +69,33 @@ public class ProducerRunner implements ApplicationRunner {
         Thread monitorThread = new Thread(runnable);
         monitorThread.start();
 
-        //增加增量监控
-        fileFilterConfig.FileFilter(FileConstants.ROOTPATH, "daily.log", INCREMENTAL_MONITORING);
+        List<String> paths = collectionConfig.getPaths();
+        List<String> types = collectionConfig.getTypes();
 
-        //对文件增加全量监控
-        fileFilterConfig.FileFilter(FileConstants.ROOTPATH, "full.log", FULL_MONITORING);
+
+
+        if (paths.size() != types.size()) {
+            throw new RuntimeException("采集程序配置有误");
+        }
+        for (int i = 0; i < paths.size(); i++) {
+            String path = paths.get(i);
+            String type = types.get(i);
+            int lastIndex = path.lastIndexOf('/');
+            String rootPath = path.substring(0, lastIndex + 1);
+            String fileName = path.substring(lastIndex + 1);
+            fileFilterConfig.FileFilter(rootPath, fileName, type);
+        }
+
+//        TimeUnit.MINUTES.sleep(1000);
+
 
         while (true) {
             Message message = Message.getRandom();
-            String log = objectMapper.writeValueAsString(message);
-//            String log = objectMapper.writeValueAsString(Message.send("03", "031523400019", "15030315234000198000000000058FCCC4EDC80514", TestPlaform.CORRECTOR_INITIAL_CHECK, LogLevel.INFO, MachineId.getRandom()));
-//            kafkaTemplate.send("log-topic", msg);
-//            System.out.println(log);
-            dailyLogger.error(log);
-            Thread.sleep(100);
+            String log1 = objectMapper.writeValueAsString(message);
+            String log2 = objectMapper.writeValueAsString(message);
+            dailyLogger1.error(log1);
+            dailyLogger2.error(log2);
+            Thread.sleep(1000);
         }
     }
 }

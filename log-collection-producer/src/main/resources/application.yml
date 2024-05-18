@@ -31,4 +31,15 @@ spring:
           #
           max-wait: 100ms
 
+log:
+  collection:
+    paths:
+      - /Users/papu/IdeaProjects/logs/daily1.log
+      - /Users/papu/IdeaProjects/logs/daily1.log
+      - /Users/papu/IdeaProjects/logs/daily2.log
+
+    types:
+      - Full Monitoring
+      - Incremental Monitoring
+      - Full Monitoring
 
